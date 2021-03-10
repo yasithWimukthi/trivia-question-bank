@@ -39,7 +39,7 @@ public class AppController extends Application {
 //                });
 //    }
 
-    public static synchronized AppController getInstance(Context context) {
+    public static synchronized AppController getInstance() {
 //        if (instance == null) {
 //            instance = new AppController(context);
 //        }
