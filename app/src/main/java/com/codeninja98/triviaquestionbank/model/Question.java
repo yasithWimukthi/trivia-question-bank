@@ -1,23 +1,23 @@
 package com.codeninja98.triviaquestionbank.model;
 
 public class Question {
-    private String answer;
+    private String question;
     private boolean answerTrue;
 
     public Question() {
     }
 
-    public Question(String answer, boolean answerTrue) {
-        this.answer = answer;
+    public Question(String question, boolean answerTrue) {
+        this.question = question;
         this.answerTrue = answerTrue;
     }
 
-    public String getAnswer() {
-        return answer;
+    public String getQuestion() {
+        return question;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
     public boolean isAnswerTrue() {

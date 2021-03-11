@@ -1,7 +1,5 @@
 package com.codeninja98.triviaquestionbank.data;
 
-import android.util.Log;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -10,11 +8,10 @@ import com.codeninja98.triviaquestionbank.controller.AppController;
 import com.codeninja98.triviaquestionbank.model.Question;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.codeninja98.triviaquestionbank.controller.AppController.TAG;
 
 public class QuestionBank {
     List<Question> questionArrayList = new ArrayList<>();
@@ -29,7 +26,19 @@ public class QuestionBank {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.d("json stuff", "onResponse: "+ response);
+                        for (int i=0;i<response.length();i++){
+                            try {
+                                Question question = new Question();
+                                question.setQuestion(response.getJSONArray(i).get(0).toString());
+                                question.setAnswerTrue(response.getJSONArray(i).getBoolean(1));
+
+                                questionArrayList.add(question);
+
+                            }catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+                        //Log.d("json stuff", "onResponse: "+ response);
                     }
                 },
                 new Response.ErrorListener() {
@@ -40,6 +49,6 @@ public class QuestionBank {
                 }
         );
         AppController.getInstance().addToRequestQueue(jsonArrayRequest);
-        return null;
+        return questionArrayList;
     }
 }
