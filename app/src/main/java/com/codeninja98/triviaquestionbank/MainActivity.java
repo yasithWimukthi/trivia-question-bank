@@ -2,11 +2,14 @@ package com.codeninja98.triviaquestionbank;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(userAnswer == isAnswerTrue){
             Toasty.success(MainActivity.this, "Your answer is correct!", Toast.LENGTH_SHORT, true).show();
         }else{
+            shakeAnimation();
             Toasty.error(MainActivity.this, "Your answer is wrong!", Toast.LENGTH_SHORT, true).show();
         }
         updateQuestion();
@@ -108,5 +112,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String question = questionList.get(currentQuestionIndex).getQuestion();
         questionTextView.setText(question);
         questionCounterTextView.setText(currentQuestionIndex + " / " +questionList.size() );
+    }
+
+    private void shakeAnimation(){
+        Animation shake = AnimationUtils.loadAnimation(MainActivity.this,R.anim.shake_animation);
+        CardView cardView = findViewById(R.id.cardView);
+        cardView.setAnimation(shake);
+
+        shake.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                cardView.setCardBackgroundColor(Color.RED);
+                questionTextView.setTextColor(Color.WHITE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                cardView.setCardBackgroundColor(Color.WHITE);
+                questionTextView.setTextColor(Color.BLACK);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 }
