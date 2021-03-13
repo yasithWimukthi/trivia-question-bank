@@ -17,7 +17,7 @@ public class QuestionBank {
     List<Question> questionArrayList = new ArrayList<>();
     private String url = "https://raw.githubusercontent.com/curiousily/simple-quiz/master/script/statements.json";
 
-    public List<Question> getQuestions() {
+    public List<Question> getQuestions(final AnswerListAsyncResponse callBack) {
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
@@ -38,6 +38,7 @@ public class QuestionBank {
                                 e.printStackTrace();
                             }
                         }
+                        if (null != callBack) callBack.processFinished((ArrayList<Question>) questionArrayList);
                         //Log.d("json stuff", "onResponse: "+ response);
                     }
                 },
