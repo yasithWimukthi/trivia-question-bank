@@ -47,6 +47,7 @@
             android:paddingStart="5dp"
             android:paddingLeft="5dp"
             android:text="Question goes here"
+            android:textColor="@color/black"
             android:textSize="18sp" />
     </androidx.cardview.widget.CardView>
 
