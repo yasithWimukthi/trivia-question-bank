@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codeninja98.triviaquestionbank.controller.AppController;
 import com.codeninja98.triviaquestionbank.data.AnswerListAsyncResponse;
@@ -18,6 +19,8 @@ import com.codeninja98.triviaquestionbank.model.Question;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Define ColorDrawable object and parse color
         // using parseColor method
         // with color hash code as its parameter
-        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#008677"));
+        ColorDrawable colorDrawable = new ColorDrawable(Color.parseColor("#FFDE03"));
         // Set BackgroundDrawable
         actionBar.setBackgroundDrawable(colorDrawable);
 
@@ -58,11 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         falseButton.setOnClickListener(this);
         trueButton.setOnClickListener(this);
 
-        questionList = new QuestionBank().getQuestions(new AnswerListAsyncResponse() {
-            @Override
-            public void processFinished(ArrayList<Question> questionArrayList) {
-
-            }
+        questionList = new QuestionBank().getQuestions(questionArrayList -> {
+            questionTextView.setText(questionArrayList.get(currentQuestionIndex).getQuestion());
+            questionCounterTextView.setText(currentQuestionIndex + " / " +questionArrayList.size() );
         });
 
 
@@ -70,6 +71,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.prev_btn:
+                if(currentQuestionIndex>0){
+                    currentQuestionIndex = (currentQuestionIndex-1) % questionList.size();
+                    updateQuestion();
+                }
+                break;
+            case R.id.next_btn:
+                currentQuestionIndex = (currentQuestionIndex+1) % questionList.size();
+                updateQuestion();
+                break;
+            case R.id.true_btn:
+                currentQuestionIndex = (currentQuestionIndex+1) % questionList.size();
+                checkAnswer(true);
+                break;
+            case R.id.false_btn:
+                currentQuestionIndex = (currentQuestionIndex+1) % questionList.size();
+                checkAnswer(false);
+                break;
+        }
+    }
 
+    private void checkAnswer(boolean userAnswer) {
+        boolean isAnswerTrue = questionList.get(currentQuestionIndex).isAnswerTrue();
+        int toastMessageId = 0;
+        if(userAnswer == isAnswerTrue){
+            Toasty.success(MainActivity.this, "Your answer is correct!", Toast.LENGTH_SHORT, true).show();
+        }else{
+            Toasty.error(MainActivity.this, "Your answer is wrong!", Toast.LENGTH_SHORT, true).show();
+        }
+        updateQuestion();
+    }
+
+    private void updateQuestion() {
+        String question = questionList.get(currentQuestionIndex).getQuestion();
+        questionTextView.setText(question);
+        questionCounterTextView.setText(currentQuestionIndex + " / " +questionList.size() );
     }
 }
