@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean isAnswerTrue = questionList.get(currentQuestionIndex).isAnswerTrue();
         int toastMessageId = 0;
         if(userAnswer == isAnswerTrue){
+            fadeView();
             Toasty.success(MainActivity.this, "Your answer is correct!", Toast.LENGTH_SHORT, true).show();
         }else{
             shakeAnimation();
@@ -138,4 +140,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+    private void fadeView(){
+        CardView cardView = findViewById(R.id.cardView);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f,0.0f);
+        alphaAnimation.setDuration(350);
+        alphaAnimation.setRepeatCount(1);
+        alphaAnimation.setRepeatMode(Animation.REVERSE);
+
+        cardView.setAnimation(alphaAnimation);
+
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                cardView.setCardBackgroundColor(Color.GREEN);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                cardView.setCardBackgroundColor(Color.WHITE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
 }

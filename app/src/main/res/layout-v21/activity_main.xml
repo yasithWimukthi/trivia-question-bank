@@ -43,6 +43,7 @@
             android:id="@+id/question_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:padding="8dp"
             android:paddingStart="5dp"
             android:paddingLeft="5dp"
