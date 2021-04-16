@@ -20,7 +20,10 @@ import com.codeninja98.triviaquestionbank.controller.AppController;
 import com.codeninja98.triviaquestionbank.data.AnswerListAsyncResponse;
 import com.codeninja98.triviaquestionbank.data.QuestionBank;
 import com.codeninja98.triviaquestionbank.model.Question;
+import com.codeninja98.triviaquestionbank.model.Score;
+import com.codeninja98.triviaquestionbank.util.Prefs;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +37,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button falseButton;
     private ImageButton nextButton;
     private ImageButton prevButton;
+    private TextView scoreTextView;
+    private TextView highestScoreTextView;
     private int currentQuestionIndex;
     private List<Question> questionList;
+    private Score score;
+    private Prefs prefs;
 
+
+    private int scoreCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         trueButton = findViewById(R.id.true_btn);
         questionTextView = findViewById(R.id.question_textview);
         questionCounterTextView = findViewById(R.id.counterText);
+        scoreTextView = findViewById(R.id.scoreTextView);
+        highestScoreTextView = findViewById(R.id.highestScoreTextView);
+
+        score = new Score();
+        prefs = new Prefs(MainActivity.this);
 
         nextButton.setOnClickListener(this);
         prevButton.setOnClickListener(this);
@@ -70,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             questionCounterTextView.setText(currentQuestionIndex + " / " +questionArrayList.size() );
         });
 
-
+        MessageFormat.format("Current Score : {0}", String.valueOf(score.getScore()));
+        highestScoreTextView.setText(MessageFormat.format("Highest Score : {0}", String.valueOf(prefs.getHighestScore())));
     }
 
     @Override
@@ -101,9 +116,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean isAnswerTrue = questionList.get(currentQuestionIndex).isAnswerTrue();
         int toastMessageId = 0;
         if(userAnswer == isAnswerTrue){
+            addPoints();
             fadeView();
             Toasty.success(MainActivity.this, "Your answer is correct!", Toast.LENGTH_SHORT, true).show();
         }else{
+            decreasePoints();
             shakeAnimation();
             Toasty.error(MainActivity.this, "Your answer is wrong!", Toast.LENGTH_SHORT, true).show();
         }
@@ -168,4 +185,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    private void addPoints(){
+        scoreCounter += 100;
+        score.setScore(scoreCounter);
+        scoreTextView.setText(MessageFormat.format("Current Score : {0}", String.valueOf(score.getScore())));
+    }
+
+    private void decreasePoints() {
+        if (scoreCounter - 100 > 0) {
+            scoreCounter -= 100;
+        } else{
+            scoreCounter = 0;
+        }
+            score.setScore(scoreCounter);
+            scoreTextView.setText(MessageFormat.format("Current Score : {0}", String.valueOf(score.getScore())));
+    }
+
+    @Override
+    protected void onPause() {
+        prefs.saveHighestScore(scoreCounter);
+        super.onPause();
+    }
 }
