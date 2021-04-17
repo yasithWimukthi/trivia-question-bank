@@ -22,4 +22,12 @@ public class Prefs {
     public int getHighestScore(){
         return preferences.getInt("highest_score",0);
     }
+    
+    public void setState(int index){
+        preferences.edit().putInt("last_question_index",index).apply();
+    }
+
+    public int getState(){
+        return preferences.getInt("last_question_index",0);
+    }
 }

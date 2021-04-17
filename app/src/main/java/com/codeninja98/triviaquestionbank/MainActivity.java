@@ -86,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         MessageFormat.format("Current Score : {0}", String.valueOf(score.getScore()));
         highestScoreTextView.setText(MessageFormat.format("Highest Score : {0}", String.valueOf(prefs.getHighestScore())));
+
+        currentQuestionIndex = prefs.getState();
     }
 
     @Override
@@ -204,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         prefs.saveHighestScore(scoreCounter);
+        prefs.setState(this.currentQuestionIndex);
         super.onPause();
     }
 }
